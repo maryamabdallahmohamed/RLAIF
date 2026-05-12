@@ -1,0 +1,14 @@
+[project]
+name = "rlaif"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.2.0",
+    "transformers>=4.40.0",
+    "datasets>=2.19.0",
+    "peft>=0.10.0",
+    "trl>=0.8.6",
+    "accelerate>=0.29.0",
+]
