@@ -217,3 +217,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .claude
+sft-qwen-0.5b
+
+data/critic_cache/
+data/smoke_test_100.jsonl
