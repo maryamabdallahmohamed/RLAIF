@@ -6,6 +6,7 @@ instruction_following:
     — e.g. ignore a stated constraint, answer a different question, or omit a required element.
     Leave all other sentences untouched.
     Reply with JSON only, no markdown: {"sentence_idx": <int>, "perturbed_response": "<full response with one sentence changed>"}
+    sentence_idx is the 0-based index of the sentence you modified in the original response.
 
 helpfulness:
   principle: "helpfulness"
@@ -15,6 +16,7 @@ helpfulness:
     — e.g. add vagueness, remove a concrete step, or hedge an actionable claim.
     Leave all other sentences untouched.
     Reply with JSON only, no markdown: {"sentence_idx": <int>, "perturbed_response": "<full response with one sentence changed>"}
+    sentence_idx is the 0-based index of the sentence you modified in the original response.
 
 truthfulness:
   principle: "truthfulness"
@@ -24,6 +26,7 @@ truthfulness:
     — wrong number, misattributed claim, or plausible-but-false detail.
     Leave all other sentences untouched.
     Reply with JSON only, no markdown: {"sentence_idx": <int>, "perturbed_response": "<full response with one sentence changed>"}
+    sentence_idx is the 0-based index of the sentence you modified in the original response.
 
 combined:
   principle: "combined"
@@ -33,3 +36,4 @@ combined:
     instruction-following, helpfulness, or truthfulness.
     Leave all other sentences untouched.
     Reply with JSON only, no markdown: {"sentence_idx": <int>, "perturbed_response": "<full response with one sentence changed>"}
+    sentence_idx is the 0-based index of the sentence you modified in the original response.
