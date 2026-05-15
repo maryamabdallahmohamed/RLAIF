@@ -1,10 +1,14 @@
 import json
+import re
 from pathlib import Path
 from typing import Callable
 
 import yaml
 
 from . import cache as _cache
+
+
+_FENCE_RE = re.compile(r"^```(?:json)?\s*(.*?)\s*```$", re.DOTALL)
 
 
 class CriticParseError(Exception):
@@ -39,18 +43,20 @@ class CriticAgent:
         if cached is not None:
             return cached
 
+        if constitution_name not in self._constitutions:
+            raise CriticParseError(
+                f"Unknown constitution: {constitution_name!r}. "
+                f"Available: {list(self._constitutions)}"
+            )
         system_prompt = self._constitutions[constitution_name]["system_prompt"]
         user_message = f"Prompt: {prompt}\n\nResponse: {response}"
         raw = self._chat(system_prompt, user_message)
 
         try:
             json_str = raw.strip()
-            if "```" in json_str:
-                start = json_str.index("```") + 3
-                if json_str[start : start + 4] == "json":
-                    start += 4
-                end = json_str.rindex("```")
-                json_str = json_str[start:end].strip()
+            m = _FENCE_RE.fullmatch(json_str)
+            if m:
+                json_str = m.group(1)
             data = json.loads(json_str)
             perturbed_response = str(data["perturbed_response"])
             sentence_idx = int(data["sentence_idx"])

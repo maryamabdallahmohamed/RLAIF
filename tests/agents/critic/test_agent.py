@@ -95,3 +95,19 @@ def test_perturb_markdown_wrapped_json_is_parsed(constitutions_file, tmp_path):
     perturbed, idx = critic.perturb("p", "r", "helpfulness")
     assert perturbed == "Wrapped response."
     assert idx == 2
+
+
+def test_perturb_unknown_constitution_raises_critic_parse_error(constitutions_file, tmp_path):
+    def fake_client(url, model, system_prompt, user_message):
+        return "{}"
+
+    critic = CriticAgent(
+        ollama_url="http://localhost:11434",
+        model="test-model",
+        constitutions_path=constitutions_file,
+        cache_dir=tmp_path / "cache",
+        _client_fn=fake_client,
+    )
+
+    with pytest.raises(CriticParseError):
+        critic.perturb("p", "r", "nonexistent_constitution")
