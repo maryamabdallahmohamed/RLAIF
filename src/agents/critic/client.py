@@ -7,6 +7,7 @@ def chat(
     system_prompt: str,
     user_message: str,
 ) -> str:
+    """Call Ollama /api/chat. Raises httpx.HTTPStatusError or httpx.TransportError on failure."""
     payload = {
         "model": model,
         "messages": [
@@ -15,6 +16,6 @@ def chat(
         ],
         "stream": False,
     }
-    resp = httpx.post(f"{ollama_url}/api/chat", json=payload, timeout=120.0)
+    resp = httpx.post(f"{ollama_url.rstrip('/')}/api/chat", json=payload, timeout=120.0)
     resp.raise_for_status()
     return resp.json()["message"]["content"]
