@@ -1,7 +1,10 @@
 import re
 
 import nltk
-nltk.download("punkt_tab", quiet=True)
+try:
+    nltk.data.find("tokenizers/punkt_tab")
+except LookupError:
+    nltk.download("punkt_tab", quiet=True)
 from nltk.tokenize import sent_tokenize
 
 _CODE_BLOCK = re.compile(r"(```.*?```)", re.DOTALL)
