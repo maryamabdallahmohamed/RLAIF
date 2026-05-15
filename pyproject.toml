@@ -11,4 +11,15 @@ dependencies = [
     "peft>=0.10.0",
     "trl>=0.8.6",
     "accelerate>=0.29.0",
+    "httpx>=0.28.1",
+    "nltk>=3.9.4",
+    "pyyaml>=6.0.3",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
