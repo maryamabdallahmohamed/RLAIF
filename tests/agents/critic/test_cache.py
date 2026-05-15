@@ -38,3 +38,9 @@ def test_write_creates_cache_dir_if_missing(tmp_path):
     nested = tmp_path / "a" / "b" / "cache"
     write(nested, "helpfulness", "p", "r", "perturbed", 0)
     assert nested.exists()
+
+
+def test_cache_key_no_collision_on_concatenation():
+    k1 = _cache_key("ab", "cd", "ef")
+    k2 = _cache_key("a", "bcd", "ef")
+    assert k1 != k2
