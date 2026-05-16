@@ -1,0 +1,35 @@
+Skipping import of cpp extensions due to incompatible torch version. Please upgrade to torch >= 2.11.0 (found 2.10.0+cu128).
+Device: cuda
+GPU: Tesla T4 (sm_75)
+Loading tokenizer from: sft-qwen-0.5b
+Loading base model Qwen/Qwen2.5-0.5B...
+Precision: fp16
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights: 100% 290/290 [00:01<00:00, 282.99it/s, Materializing param=model.norm.weight]
+Attaching SFT LoRA adapter from sft-qwen-0.5b...
+trainable params: 2,162,688 || all params: 496,195,456 || trainable%: 0.4359
+Building DPO dataset (max_pairs=5000)...
+Applying Qwen chat template (num_proc=2): 100% 5000/5000 [00:06<00:00, 754.85 examples/s] 
+Dataset size: 5,000
+Adding EOS to train dataset: 100% 5000/5000 [00:00<00:00, 18382.94 examples/s]
+Tokenizing train dataset:  95% 4737/5000 [00:16<00:00, 324.35 examples/s][RANK 0] Mismatch between tokenized prompt and the start of tokenized prompt+rejected. This may be due to unexpected tokenizer behavior, whitespace issues, or special token handling. Verify that the tokenizer is processing text consistently.
+Tokenizing train dataset: 100% 5000/5000 [00:17<00:00, 281.07 examples/s]
+Starting DPO training...
+The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': None, 'pad_token_id': 151643}.
+{'loss': '0.6705', 'grad_norm': '14.44', 'learning_rate': '4.665e-06', 'entropy': '1.143', 'num_tokens': '2.994e+05', 'logits/chosen': '-2.022', 'logits/rejected': '-1.901', 'mean_token_accuracy': '0.6912', 'rewards/chosen': '-0.01296', 'rewards/rejected': '-0.0622', 'rewards/accuracies': '0.59', 'rewards/margins': '0.04923', 'logps/chosen': '-341.2', 'logps/rejected': '-274', 'epoch': '0.08'}
+{'loss': '0.6141', 'grad_norm': '14.41', 'learning_rate': '4.265e-06', 'entropy': '1.183', 'num_tokens': '5.906e+05', 'logits/chosen': '-1.969', 'logits/rejected': '-1.953', 'mean_token_accuracy': '0.6899', 'rewards/chosen': '-0.1646', 'rewards/rejected': '-0.3538', 'rewards/accuracies': '0.7375', 'rewards/margins': '0.1892', 'logps/chosen': '-335.8', 'logps/rejected': '-264', 'epoch': '0.16'}
+{'loss': '0.5978', 'grad_norm': '16.22', 'learning_rate': '3.866e-06', 'entropy': '1.18', 'num_tokens': '8.908e+05', 'logits/chosen': '-2.014', 'logits/rejected': '-1.926', 'mean_token_accuracy': '0.6896', 'rewards/chosen': '-0.2879', 'rewards/rejected': '-0.5536', 'rewards/accuracies': '0.715', 'rewards/margins': '0.2658', 'logps/chosen': '-331.7', 'logps/rejected': '-287.8', 'epoch': '0.24'}
+{'loss': '0.6101', 'grad_norm': '15.69', 'learning_rate': '3.482e-06', 'entropy': '1.241', 'num_tokens': '1.177e+06', 'logits/chosen': '-1.946', 'logits/rejected': '-1.925', 'mean_token_accuracy': '0.6734', 'rewards/chosen': '-0.3954', 'rewards/rejected': '-0.6709', 'rewards/accuracies': '0.6475', 'rewards/margins': '0.2755', 'logps/chosen': '-334.1', 'logps/rejected': '-266.9', 'epoch': '0.32'}
+{'loss': '0.5565', 'grad_norm': '13.66', 'learning_rate': '3.083e-06', 'entropy': '1.195', 'num_tokens': '1.478e+06', 'logits/chosen': '-1.971', 'logits/rejected': '-1.923', 'mean_token_accuracy': '0.6826', 'rewards/chosen': '-0.2684', 'rewards/rejected': '-0.6835', 'rewards/accuracies': '0.735', 'rewards/margins': '0.4151', 'logps/chosen': '-350.1', 'logps/rejected': '-287.5', 'epoch': '0.4'}
+{'loss': '0.5324', 'grad_norm': '14.07', 'learning_rate': '2.684e-06', 'entropy': '1.175', 'num_tokens': '1.778e+06', 'logits/chosen': '-1.969', 'logits/rejected': '-1.868', 'mean_token_accuracy': '0.6911', 'rewards/chosen': '-0.266', 'rewards/rejected': '-0.7608', 'rewards/accuracies': '0.78', 'rewards/margins': '0.4949', 'logps/chosen': '-346.1', 'logps/rejected': '-275', 'epoch': '0.48'}
+{'loss': '0.5377', 'grad_norm': '13.21', 'learning_rate': '2.284e-06', 'entropy': '1.153', 'num_tokens': '2.071e+06', 'logits/chosen': '-1.936', 'logits/rejected': '-1.839', 'mean_token_accuracy': '0.6927', 'rewards/chosen': '-0.2913', 'rewards/rejected': '-0.7825', 'rewards/accuracies': '0.755', 'rewards/margins': '0.4912', 'logps/chosen': '-335.2', 'logps/rejected': '-262.1', 'epoch': '0.56'}
+{'loss': '0.5243', 'grad_norm': '12.3', 'learning_rate': '1.885e-06', 'entropy': '1.202', 'num_tokens': '2.364e+06', 'logits/chosen': '-1.912', 'logits/rejected': '-1.921', 'mean_token_accuracy': '0.6813', 'rewards/chosen': '-0.3088', 'rewards/rejected': '-0.8429', 'rewards/accuracies': '0.7575', 'rewards/margins': '0.5341', 'logps/chosen': '-344', 'logps/rejected': '-278.2', 'epoch': '0.64'}
+{'loss': '0.5664', 'grad_norm': '13.76', 'learning_rate': '1.486e-06', 'entropy': '1.205', 'num_tokens': '2.645e+06', 'logits/chosen': '-1.968', 'logits/rejected': '-1.844', 'mean_token_accuracy': '0.6907', 'rewards/chosen': '-0.3899', 'rewards/rejected': '-0.8216', 'rewards/accuracies': '0.7025', 'rewards/margins': '0.4317', 'logps/chosen': '-311.2', 'logps/rejected': '-247.2', 'epoch': '0.72'}
+{'loss': '0.5232', 'grad_norm': '15.91', 'learning_rate': '1.086e-06', 'entropy': '1.159', 'num_tokens': '2.937e+06', 'logits/chosen': '-1.957', 'logits/rejected': '-1.919', 'mean_token_accuracy': '0.6938', 'rewards/chosen': '-0.3046', 'rewards/rejected': '-0.8768', 'rewards/accuracies': '0.7625', 'rewards/margins': '0.5722', 'logps/chosen': '-338.5', 'logps/rejected': '-271', 'epoch': '0.8'}
+{'loss': '0.5195', 'grad_norm': '14.86', 'learning_rate': '6.869e-07', 'entropy': '1.22', 'num_tokens': '3.214e+06', 'logits/chosen': '-1.99', 'logits/rejected': '-1.819', 'mean_token_accuracy': '0.6893', 'rewards/chosen': '-0.3383', 'rewards/rejected': '-0.9025', 'rewards/accuracies': '0.77', 'rewards/margins': '0.5642', 'logps/chosen': '-334.7', 'logps/rejected': '-264.4', 'epoch': '0.88'}
+{'loss': '0.5697', 'grad_norm': '13.1', 'learning_rate': '2.875e-07', 'entropy': '1.172', 'num_tokens': '3.502e+06', 'logits/chosen': '-1.958', 'logits/rejected': '-1.926', 'mean_token_accuracy': '0.6924', 'rewards/chosen': '-0.344', 'rewards/rejected': '-0.7816', 'rewards/accuracies': '0.74', 'rewards/margins': '0.4376', 'logps/chosen': '-326.6', 'logps/rejected': '-269.4', 'epoch': '0.96'}
+{'train_runtime': '2261', 'train_samples_per_second': '2.211', 'train_steps_per_second': '0.138', 'train_loss': '0.5661', 'entropy': '1.165', 'num_tokens': '3.642e+06', 'logits/chosen': '-1.89', 'logits/rejected': '-1.826', 'mean_token_accuracy': '0.6982', 'rewards/chosen': '-0.2772', 'rewards/rejected': '-0.8161', 'rewards/accuracies': '0.8', 'rewards/margins': '0.5389', 'logps/chosen': '-318.3', 'logps/rejected': '-265.6', 'epoch': '1'}
+100% 313/313 [37:41<00:00,  7.22s/it]
+Saving DPO adapter to checkpoints/dpo-qwen-0.5b/
+Done.
