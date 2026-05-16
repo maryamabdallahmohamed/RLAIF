@@ -218,6 +218,16 @@ __marimo__/
 .streamlit/secrets.toml
 .claude
 sft-qwen-0.5b
+dpo-qwen-0.5b
+checkpoints/
 
 data/critic_cache/
 data/smoke_test_100.jsonl
+
+# Local scratch from docx extraction (not part of the project)
+plan_extracted.txt
+
+# Local upload/download archives for Colab handoff
+*.zip
+*.rar
+*.tar.gz
