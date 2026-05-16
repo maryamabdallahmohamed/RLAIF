@@ -38,8 +38,9 @@ class CriticAgent:
         prompt: str,
         response: str,
         constitution_name: str,
+        perturbation_idx: int = 0,
     ) -> tuple[str, int]:
-        cached = _cache.read(self._cache_dir, constitution_name, prompt, response)
+        cached = _cache.read(self._cache_dir, constitution_name, prompt, response, perturbation_idx)
         if cached is not None:
             return cached
 
@@ -65,6 +66,6 @@ class CriticAgent:
 
         _cache.write(
             self._cache_dir, constitution_name, prompt, response,
-            perturbed_response, sentence_idx,
+            perturbed_response, sentence_idx, perturbation_idx,
         )
         return perturbed_response, sentence_idx
