@@ -97,7 +97,6 @@ def _generate(model, tokenizer, prompt: str, max_new_tokens: int = 256) -> str:
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=False,
-            temperature=1.0,
             pad_token_id=tokenizer.pad_token_id,
         )
     full = tokenizer.decode(out[0], skip_special_tokens=True)
@@ -162,6 +161,7 @@ def run_winrate(
     model_b, tok_b = _load_policy(adapter_b)
     responses_b = [_generate(model_b, tok_b, p) for p in prompts]
     del model_b
+    torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
     print(f"Judging {len(prompts)} pairs × 2 orderings = {2 * len(prompts)} judge calls...")
     rng = random.Random(seed)

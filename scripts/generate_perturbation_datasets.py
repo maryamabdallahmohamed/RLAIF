@@ -289,7 +289,8 @@ def main() -> None:
     for constitution in CONSTITUTIONS:
         output_path = OUTPUT_DIR / f"{constitution}.jsonl"
         records = generate_constitution_dataset(
-            critic, pairs, constitution, args.n_perturbations, output_path
+            critic, pairs, constitution, args.n_perturbations, output_path,
+            max_workers=2,  # intentionally fixed; increase only if the Ollama endpoint can handle concurrency
         )
         all_datasets[constitution] = records
 
