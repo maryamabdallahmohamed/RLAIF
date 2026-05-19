@@ -18,6 +18,7 @@ Usage:
 """
 import argparse
 import json
+import os
 import random
 import sys
 from collections import defaultdict
@@ -26,6 +27,7 @@ from pathlib import Path
 from datasets import load_dataset
 
 from src.agents.critic.agent import CriticAgent, CriticParseError
+from src.utils.env import load_env
 
 CONSTITUTIONS = ["instruction_following", "helpfulness", "truthfulness", "combined"]
 N_PAIRS = 1000
@@ -110,38 +112,59 @@ def generate_constitution_dataset(
     constitution: str,
     n_perturbations: int,
     output_path: Path,
+    max_workers: int = 2,
 ) -> list[dict]:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    import threading
+
     records: list[dict] = []
     parse_errors = 0
     total = len(pairs) * n_perturbations
+    print(f"\n[{constitution}] Generating {total} perturbations "
+          f"({len(pairs)} pairs × {n_perturbations}) with {max_workers} workers...")
 
-    print(f"\n[{constitution}] Generating {total} perturbations ({len(pairs)} pairs × {n_perturbations})...")
+    tasks = [(i, pidx, prompt, response)
+             for i, (prompt, response) in enumerate(pairs)
+             for pidx in range(n_perturbations)]
 
-    with open(output_path, "w") as f:
-        for i, (prompt, response) in enumerate(pairs):
-            for pidx in range(n_perturbations):
-                try:
-                    perturbed, sentence_idx = critic.perturb(
-                        prompt, response, constitution, perturbation_idx=pidx
-                    )
-                    record = {
-                        "prompt": prompt,
-                        "original_response": response,
-                        "perturbed_sentence_idx": sentence_idx,
-                        "perturbed_response": perturbed,
-                        "constitution": constitution,
-                    }
-                    records.append(record)
-                    f.write(json.dumps(record, ensure_ascii=False) + "\n")
-                except CriticParseError as e:
-                    parse_errors += 1
-                    print(f"  [PARSE ERROR] pair {i}, perturbation {pidx}: {e}")
+    def _one(task):
+        i, pidx, prompt, response = task
+        try:
+            perturbed, sentence_idx = critic.perturb(
+                prompt, response, constitution, perturbation_idx=pidx
+            )
+            return ("ok", {
+                "prompt": prompt,
+                "original_response": response,
+                "perturbed_sentence_idx": sentence_idx,
+                "perturbed_response": perturbed,
+                "constitution": constitution,
+            })
+        except CriticParseError as e:
+            return ("parse_error", f"pair {i} pidx {pidx}: {e}")
+        except Exception as e:
+            return ("net_error", f"pair {i} pidx {pidx}: {type(e).__name__}: {e}")
 
-            if (i + 1) % 100 == 0:
-                done = (i + 1) * n_perturbations
-                print(f"  {i + 1}/{len(pairs)} pairs ({done}/{total} perturbations, {parse_errors} errors so far)")
+    write_lock = threading.Lock()
+    done_count = 0
+    with open(output_path, "w") as f, ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = [ex.submit(_one, t) for t in tasks]
+        for fut in as_completed(futures):
+            status, payload = fut.result()
+            done_count += 1
+            if status == "ok":
+                with write_lock:
+                    records.append(payload)
+                    f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+                    f.flush()
+            else:
+                parse_errors += 1
+                if parse_errors <= 5 or parse_errors % 25 == 0:
+                    print(f"  [{status.upper()}] {payload}")
+            if done_count % 50 == 0:
+                print(f"  {done_count}/{total} done ({parse_errors} errors)")
 
-    print(f"  Done. {len(records)}/{total} written, {parse_errors} parse errors. → {output_path}")
+    print(f"  Done. {len(records)}/{total} written, {parse_errors} errors. → {output_path}")
     return records
 
 
@@ -237,9 +260,10 @@ def build_agreement_weighted(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    load_env()
     parser = argparse.ArgumentParser(description="Generate full perturbation datasets (Member B).")
-    parser.add_argument("--model", default="llama3.1:8b")
-    parser.add_argument("--url", default="http://localhost:11434")
+    parser.add_argument("--model", default=os.environ.get("CRITIC_MODEL", "gpt-oss:20b-cloud"))
+    parser.add_argument("--url", default=os.environ.get("OLLAMA_URL", "https://ollama.com"))
     parser.add_argument("--held-out-start", type=int, default=HELD_OUT_START,
                         help="Start index of held-out UltraFeedback slice (default: 50000)")
     parser.add_argument("--n-pairs", type=int, default=N_PAIRS)

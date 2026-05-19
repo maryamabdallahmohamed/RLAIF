@@ -231,3 +231,25 @@ plan_extracted.txt
 *.zip
 *.rar
 *.tar.gz
+
+# Model artifact directories (large, local-only)
+rlaif-ensemble/
+rlaif-single/
+
+# Generated evaluation result files
+eval/*.json
+
+# Generated figures and charts
+figures/
+
+# Generated results document
+RESULTS.md
+
+# Local planning PDF
+precise_rlaif_marl_4week_plan_v2.pdf
+
+# Claude Code internal plans and specs
+docs/superpowers/
+
+# Generated perturbation dataset
+data/perturbation/

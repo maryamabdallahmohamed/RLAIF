@@ -1,34 +1,41 @@
 """
-100-pair smoke test for CriticAgent against UltraFeedback.
+Smoke test for CriticAgent against UltraFeedback.
 
-Usage:
-    python scripts/smoke_test_critic.py [--model llama3.1:8b] [--url http://localhost:11434]
+Usage (Ollama Cloud, default — reads OLLAMA_API_KEY/CRITIC_MODEL/OLLAMA_URL from .env):
+    python scripts/smoke_test_critic.py --n 5
 
-Writes results to data/smoke_test_100.jsonl.
-Prints: total pairs, parse error rate, sentence_idx out-of-range rate.
+Usage (local Ollama):
+    python scripts/smoke_test_critic.py --model llama3.1:8b --url http://localhost:11434
+
+Writes results to data/smoke_test_<N>.jsonl.
 """
 import argparse
 import json
+import os
 from pathlib import Path
 
 from datasets import load_dataset
 
 from src.agents.critic.agent import CriticAgent, CriticParseError
 from src.agents.critic.segment import segment
+from src.utils.env import load_env
 
 CONSTITUTIONS = ["instruction_following", "helpfulness", "truthfulness", "combined"]
-N_SAMPLES = 100
-OUTPUT_PATH = Path("data/smoke_test_100.jsonl")
 CACHE_DIR = Path("data/critic_cache")
 CONSTITUTIONS_PATH = Path("src/agents/critic/constitutions.yaml")
 
 
 def main() -> None:
+    load_env()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="llama3.1:8b")
-    parser.add_argument("--url", default="http://localhost:11434")
+    parser.add_argument("--model", default=os.environ.get("CRITIC_MODEL", "gpt-oss:20b-cloud"))
+    parser.add_argument("--url", default=os.environ.get("OLLAMA_URL", "https://ollama.com"))
+    parser.add_argument("--n", type=int, default=5, help="Number of prompts")
     args = parser.parse_args()
+    N_SAMPLES = args.n
+    OUTPUT_PATH = Path(f"data/smoke_test_{N_SAMPLES}.jsonl")
 
+    print(f"Critic model: {args.model} @ {args.url}")
     print(f"Loading UltraFeedback (first {N_SAMPLES} samples)...")
     ds = load_dataset("openbmb/UltraFeedback", split=f"train[:{N_SAMPLES}]")
 
@@ -69,6 +76,9 @@ def main() -> None:
                 except CriticParseError as e:
                     parse_errors += 1
                     print(f"  [PARSE ERROR] sample {i}, {constitution_name}: {e}")
+                except Exception as e:
+                    parse_errors += 1
+                    print(f"  [NETWORK ERROR] sample {i}, {constitution_name}: {type(e).__name__}: {e}")
 
             if (i + 1) % 10 == 0:
                 print(f"  {i + 1}/{N_SAMPLES} samples processed...")
