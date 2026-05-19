@@ -1,4 +1,3 @@
-import pytest
 from src.agents.critic.segment import segment
 
 

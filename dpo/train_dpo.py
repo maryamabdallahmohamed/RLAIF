@@ -16,7 +16,7 @@ import argparse
 from pathlib import Path
 
 import torch
-from peft import LoraConfig, PeftModel, TaskType
+from peft import PeftModel
 from transformers import AutoModelForCausalLM
 from trl import DPOConfig, DPOTrainer
 
@@ -48,12 +48,6 @@ LOGGING_STEPS = 25
 # Fast mode (smoke test) — just verify it runs and loss moves; 20 steps is enough
 FAST_MAX_PAIRS = 200
 FAST_MAX_STEPS = 20
-
-# LoRA (matches the SFT adapter so the layers line up cleanly)
-LORA_R = 16
-LORA_ALPHA = 32
-LORA_DROPOUT = 0.05
-LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj"]
 
 
 # ── Device ────────────────────────────────────────────────────────────────────
