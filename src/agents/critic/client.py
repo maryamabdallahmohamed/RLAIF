@@ -12,15 +12,7 @@ def chat(
     max_retries: int = 4,
     backoff_base: float = 2.0,
 ) -> str:
-    """Call Ollama /api/chat against local or cloud Ollama, with retries.
-
-    For Ollama Cloud, set OLLAMA_API_KEY in the environment and pass
-    ollama_url="https://ollama.com". For local Ollama, leave the env var unset
-    and use http://localhost:11434.
-
-    Retries on httpx.TransportError (SSL/connection drops) and 5xx responses
-    with exponential backoff. 4xx errors raise immediately.
-    """
+    """Call Ollama /api/chat against local or cloud Ollama """
     payload = {
         "model": model,
         "messages": [

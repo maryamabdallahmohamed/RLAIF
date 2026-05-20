@@ -2,7 +2,7 @@ import json
 import re
 from pathlib import Path
 from typing import Callable
-
+from . import client as _client
 import yaml
 
 from . import cache as _cache
@@ -12,7 +12,7 @@ _FENCE_RE = re.compile(r"^```(?:json)?\s*(.*?)\s*```$", re.DOTALL)
 
 
 class CriticParseError(Exception):
-    pass
+    """Raised when the Critic's output cannot be parsed as expected."""
 
 
 class CriticAgent:
@@ -28,7 +28,7 @@ class CriticAgent:
         self._constitutions: dict = yaml.safe_load(constitutions_path.read_text())
 
         if _client_fn is None:
-            from . import client as _client
+            
             self._chat = lambda sys_p, usr: _client.chat(ollama_url, model, sys_p, usr)
         else:
             self._chat = lambda sys_p, usr: _client_fn(ollama_url, model, sys_p, usr)

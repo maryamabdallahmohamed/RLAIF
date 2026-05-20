@@ -1,20 +1,5 @@
 """
 Full perturbation dataset generation (Member B task, steps 36-42).
-
-Produces 6 JSONL files under data/perturbation/:
-  instruction_following.jsonl  (5k pairs)
-  helpfulness.jsonl            (5k pairs)
-  truthfulness.jsonl           (5k pairs)
-  combined.jsonl               (5k pairs)  ← single-Critic baseline
-  ensemble_equal_mix.jsonl     (5k pairs, 1.25k from each constitution)
-  ensemble_agreement_weighted.jsonl  (5k pairs, higher weight when all 4 critics agree on sentence)
-
-Schema per record:
-  {prompt, original_response, perturbed_sentence_idx, perturbed_response, constitution[, weight]}
-
-Usage:
-    python scripts/generate_perturbation_datasets.py [--model llama3.1:8b] [--url http://localhost:11434]
-    python scripts/generate_perturbation_datasets.py --held-out-start 50000 --n-pairs 1000 --n-perturbations 5
 """
 import argparse
 import json
