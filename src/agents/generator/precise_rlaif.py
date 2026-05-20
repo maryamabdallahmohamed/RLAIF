@@ -17,11 +17,11 @@ from datasets import Dataset
 from sft.preprocessing import get_tokenizer
 
 # ---- config -----------------------------------------------------------
-DATASET = "data/perturbation/combined.jsonl"      # or ensemble_equal_mix.jsonl
-OUTPUT_DIR = "rlaif-single"                       # or rlaif-ensemble
+DATASET = "data/perturbation/combined.jsonl"    
+OUTPUT_DIR = "rlaif-single"                       
 BASE_ADAPTER = "dpo-qwen-0.5b"
 
-FAST = False                # smoke mode: 200 pairs, 20 steps
+FAST = False               
 MAX_PAIRS: int | None = None
 MAX_STEPS = -1
 
@@ -31,7 +31,7 @@ LR = 5e-6
 WEIGHT_DECAY = 0.01
 GRAD_CLIP = 1.0
 PER_DEVICE_BATCH = 1
-GRAD_ACCUM_STEPS = 16        # effective batch 16
+GRAD_ACCUM_STEPS = 16        
 NUM_EPOCHS = 1
 MAX_LENGTH = 512
 MAX_PROMPT_LEN = 256
