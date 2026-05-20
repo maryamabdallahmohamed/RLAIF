@@ -133,7 +133,7 @@ if "save_strategy" not in accepted:
 
 trainer = DPOTrainer(
     model=model,
-    ref_model=None,                # base + adapter-disabled = frozen reference
+    ref_model=None,               
     args=DPOConfig(**dpo_kwargs),
     train_dataset=dataset,
     processing_class=tokenizer,
